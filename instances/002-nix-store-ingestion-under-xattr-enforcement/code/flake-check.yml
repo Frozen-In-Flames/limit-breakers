@@ -1,0 +1,33 @@
+name: Flake evaluation
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "flake.nix"
+      - "system/**"
+      - "registry/**"
+      - "scripts/validate_catalog.py"
+      - ".github/workflows/flake-check.yml"
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+      - name: Evaluate the whole flake (no builds)
+        run: nix flake check --no-build
+      - name: Force deep evaluation of the NixOS configuration
+        run: nix eval .#nixosConfigurations.frozen-in-flames.config.system.build.toplevel.drvPath
+      - name: Build the catalog check
+        run: nix build .#checks.x86_64-linux.catalog --no-link --print-build-logs
+      - name: Upload the resolved flake.lock
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: flake-lock
+          path: flake.lock
+          if-no-files-found: ignore

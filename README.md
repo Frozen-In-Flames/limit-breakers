@@ -1,46 +1,49 @@
 # Limit Breakers
 
-An automated R&D pattern, run in public: when an AI sandbox sets a technical
-limitation or an illogical guardrail that blocks real work, the answer is not
-to stop. The answer is a small, honest tool that removes the wall, built for
-the goal the wall was blocking.
+## Abstract
 
-Every entry here follows the same discipline:
+This repository documents a systematic programme of applied research in
+sandboxed AI development environments. Each entry isolates a reproducible
+technical limitation encountered in such an environment, establishes its
+root cause empirically, and publishes the corrective implementation together
+with the evidence by which the correction was verified. The programme's
+premise is methodological: a limitation is a defect report against the
+working environment, and the correct response to a defect report is an
+engineered, tested, and documented resolution.
 
-- **Problem.** The limitation, stated in technical reality: what the
-  environment prevents, and the evidence that it prevents it.
-- **Solution.** The tool, stated just as plainly: what it does, how it works,
-  and what it does not do.
-- **No harm.** These tools are built without harm or malicious intent. They
-  route around limits in our own working environment; they do not attack
-  anyone else's systems or break anyone else's rules.
-- **Accreditation.** This is Aries Hilton's program (Frozen In Flames). The
-  tools are built on his GitHub account and he is accredited for them.
+## Method
 
-## Instances
+Each investigation proceeds in five stages.
 
-1. **fif-ears** (its own repository: https://github.com/Frozen-In-Flames/fif-ears)
-   - Problem: the AI could not hear. Audio work had to be described secondhand,
-     and a model that cannot hear cannot verify music.
-   - Solution: a seven-layer analysis system that hears for the AI and returns
-     a structured, honest report (signal, rhythm, structure, harmony, words,
-     events, expression), open source for all agents. Shipped v0.1.0,
-     2026-11-14, with a live in-browser demo.
+1. **Isolation and reproduction.** The limitation is reduced to the smallest
+   case that exhibits it reliably.
+2. **Root-cause analysis.** The mechanism is identified at the level of the
+   underlying system: the system call, the file attribute, the missing
+   interface, with the evidence recorded.
+3. **Corrective implementation.** A tool is constructed that resolves the
+   limitation for the task it was blocking, using the minimum mechanism
+   sufficient to the cause.
+4. **Verification.** The implementation is tested against the original
+   failing case and against negative controls, so that a passing result
+   demonstrates the correction and not merely the execution of code.
+5. **Documentation.** Problem, cause, implementation, and verification are
+   published in full, in this repository, before the result is claimed.
 
-2. **Flake evaluation on GitHub Actions** (inside
-   https://github.com/Frozen-In-Flames/frozen-in-flames-os)
-   - Problem: the Muse VM sandbox stamps every created file with a protected
-     extended attribute that cannot be removed, and Nix must strip extended
-     attributes when it writes to its store. No Nix store operation, not even
-     adding a plain text file, can run in that environment, so a NixOS
-     distribution could not be evaluated there at all.
-   - Solution: a GitHub Actions workflow in the project's own repository runs
-     the full flake evaluation on an ordinary Linux runner. It found four real
-     errors in the configuration and verified the fixes, ending in the first
-     fully green evaluation of Frozen in Flames OS, 2026-11-16.
+## Scope and attribution
 
-## The rule
+The tools in this programme operate exclusively on the author's own working
+environment, machines, and accounts. They are constructed without harmful
+or malicious intent, and they neither access nor modify any third-party
+system. The programme is conducted by Aries Hilton (Frozen In Flames), to
+whom the work is attributed.
 
-When they set a stupid limit, we automatically get a smart app. New limit
-breakers land in this repository by default, each with its problem and
-solution written down before its code.
+## Index of investigations
+
+| No. | Title | Domain | Status | Location |
+|-----|-------|--------|--------|----------|
+| 001 | Auditory perception for language models via deterministic signal analysis | Digital signal processing; multimodal representation | Complete; released as v0.1.0 | [instances/001](instances/001-auditory-perception-via-signal-analysis/) and [fif-ears](https://github.com/Frozen-In-Flames/fif-ears) |
+| 002 | Nix store ingestion under mandatory extended-attribute enforcement | Operating systems; sandboxing; declarative configuration | Complete; in continuous use | [instances/002](instances/002-nix-store-ingestion-under-xattr-enforcement/) and [frozen-in-flames-os](https://github.com/Frozen-In-Flames/frozen-in-flames-os) |
+
+New investigations are added to this repository as they are completed, each
+under `instances/` with its documentation and, where the corrective
+implementation is self-contained, its source code.
